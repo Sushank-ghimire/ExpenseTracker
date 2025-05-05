@@ -1,29 +1,44 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { useEffect } from "react";
+import { Stack } from "expo-router";
+import { StatusBar } from "react-native";
+import { useFonts } from "expo-font";
+import { SplashScreen } from "expo-router";
+import ThemeProvider from "@/providers/ThemeProvider";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+// Prevent the splash screen from auto-hiding
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  const [fontsLoaded, fontError] = useFonts({
+    // "Poppins-Regular": require("@/assets/fonts/Poppins-Regular.ttf"),
+    // "Poppins-Medium": require("@/assets/fonts/Poppins-Medium.ttf"),
+    // "Poppins-SemiBold": require("@/assets/fonts/Poppins-SemiBold.ttf"),
+    // "Poppins-Bold": require("@/assets/fonts/Poppins-Bold.ttf"),
   });
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      // Hide the splash screen after fonts have loaded
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  // Return null until fonts are loaded
+  if (!fontsLoaded && !fontError) {
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <ThemeProvider>
+      <StatusBar backgroundColor={"#4F46E5"} barStyle={"light-content"} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="(onboarding)"
+          options={{ animation: "slide_from_bottom" }}
+        />
+        <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
+        <Stack.Screen name="+not-found" options={{ presentation: "modal" }} />
       </Stack>
-      <StatusBar style="auto" />
     </ThemeProvider>
   );
 }

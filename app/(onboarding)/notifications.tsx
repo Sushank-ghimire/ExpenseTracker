@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const HomePage = () => {
+const ExpenseNotifcations = () => {
   return (
     <View>
-      <Text>HomePage</Text>
+      <Text>ExpenseNotifcations</Text>
     </View>
   );
 };
 
-export default HomePage;
+export default ExpenseNotifcations;
 
 const styles = StyleSheet.create({});

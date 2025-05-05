@@ -1,43 +1,95 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import TabBarIcons from "@/components/TabBarIcons";
+import DatabaseProvider from "@/providers/DatabaseProvider";
+import { useTheme } from "@/providers/ThemeProvider";
+import { Tabs } from "expo-router";
+import { StatusBar } from "react-native";
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const TabsLayout = () => {
+  const { theme } = useTheme();
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
+    <DatabaseProvider>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          animation: "shift",
+          tabBarStyle: {
+            height: 60,
+            backgroundColor: theme.colors.primary,
           },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarInactiveTintColor: "#CBD5E1",
+          tabBarActiveTintColor: "#FFFFFF",
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+      >
+        <StatusBar
+          backgroundColor={theme.colors.primary}
+          barStyle={"dark-content"}
+          animated
+          translucent
+        />
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Home",
+            headerShown: true,
+            headerShadowVisible: false,
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabBarIcons
+                iconName={"home"}
+                color={color}
+                size={size}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="analytics"
+          options={{
+            title: "Analytics",
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabBarIcons
+                iconName={"analytics"}
+                color={color}
+                size={size}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="dashboard"
+          options={{
+            title: "Dashboard",
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabBarIcons
+                iconName={"dashboard"}
+                color={color}
+                size={size}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: "Settings",
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabBarIcons
+                iconName={"settings"}
+                color={color}
+                size={size}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+      </Tabs>
+    </DatabaseProvider>
   );
-}
+};
+
+export default TabsLayout;

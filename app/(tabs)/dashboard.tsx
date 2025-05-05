@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const HomePage = () => {
+const ExpenseDashboard = () => {
   return (
     <View>
-      <Text>HomePage</Text>
+      <Text>ExpenseDashboard</Text>
     </View>
   );
 };
 
-export default HomePage;
+export default ExpenseDashboard;
 
 const styles = StyleSheet.create({});

@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const HomePage = () => {
+const UsersSetting = () => {
   return (
     <View>
-      <Text>HomePage</Text>
+      <Text>UsersSetting</Text>
     </View>
   );
 };
 
-export default HomePage;
+export default UsersSetting;
 
 const styles = StyleSheet.create({});
