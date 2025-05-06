@@ -8,7 +8,6 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import Animated, {
   FadeIn,
@@ -16,6 +15,11 @@ import Animated, {
   SlideOutLeft,
 } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/AntDesign";
+import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
+import Entypo from "react-native-vector-icons/Entypo";
+import SafeAreaBackground from "@/components/SafeAreaBackground";
+import { useTheme } from "@/providers/ThemeProvider";
 
 const { width } = Dimensions.get("window");
 
@@ -25,28 +29,28 @@ const screens = [
     title: "Track Your Money",
     description:
       "Keep track of your income and expenses with intuitive tools and visualizations.",
-    icon: "credit-card",
+    icon: "trackpad-lock",
   },
   {
     id: 2,
     title: "Analyze Your Spending",
     description:
       "View detailed analytics to understand your financial habits and make better decisions.",
-    icon: "bar-chart-2",
+    icon: "area-graph",
   },
   {
     id: 3,
     title: "Get Timely Reminders",
     description:
       "Receive notifications for budget alerts and payment reminders.",
-    icon: "bell",
+    icon: "reminder",
   },
   {
     id: 4,
     title: "Customize Your Experience",
     description:
       "Personalize themes, categories, and other settings to match your preferences.",
-    icon: "settings",
+    icon: "dashboard-customize",
   },
 ];
 
@@ -58,11 +62,9 @@ const completeOnboarding = () => {
 export default function WelcomeScreen() {
   const [currentScreen, setCurrentScreen] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
+  const { theme } = useTheme();
+  const [alreadyUsed] = useState(Storage.getItemSync("isVisited"));
 
-  const [alreadyUsed] = useState(
-    Storage.getItemSync("isVisited")
-  );
-  
   if (alreadyUsed) {
     router.push("/(tabs)");
   }
@@ -86,7 +88,7 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: "#FFFFFF" }]}>
+    <SafeAreaBackground>
       <View style={styles.header}>
         <Text style={[styles.appTitle, { color: "#007AFF" }]}>WalletWise</Text>
         <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
@@ -113,18 +115,41 @@ export default function WelcomeScreen() {
               style={[styles.iconContainer, { backgroundColor: "#E0F0FF" }]}
               entering={FadeIn.duration(600)}
             >
-              <Icon name={screen.icon} size={64} color="#007AFF" />
+              {screen.icon === "reminder" && (
+                <MaterialCommunityIcon
+                  name={screen.icon}
+                  size={64}
+                  color="#007AFF"
+                />
+              )}
+              {screen.icon === "trackpad-lock" && (
+                <MaterialCommunityIcon
+                  name={screen.icon}
+                  size={64}
+                  color="#007AFF"
+                />
+              )}
+
+              {screen.icon === "area-graph" && (
+                <Entypo name={screen.icon} size={64} color="#007AFF" />
+              )}
+              {screen.icon === "dashboard-customize" && (
+                <MaterialIcon name={screen.icon} size={64} color="#007AFF" />
+              )}
             </Animated.View>
 
             <Animated.Text
-              style={[styles.title, { color: "#222222" }]}
+              style={[styles.title, { color: theme.colors.text }]}
               entering={FadeIn.delay(300).duration(600)}
             >
               {screen.title}
             </Animated.Text>
 
             <Animated.Text
-              style={[styles.description, { color: "#666666" }]}
+              style={[
+                styles.description,
+                { color: theme.colors.textSecondary },
+              ]}
               entering={FadeIn.delay(600).duration(600)}
             >
               {screen.description}
@@ -141,7 +166,10 @@ export default function WelcomeScreen() {
               style={[
                 styles.paginationDot,
                 index === currentScreen
-                  ? [styles.paginationDotActive, { backgroundColor: "#007AFF" }]
+                  ? [
+                      styles.paginationDotActive,
+                      { backgroundColor: theme.colors.secondary },
+                    ]
                   : { backgroundColor: "#CCCCCC" },
               ]}
             />
@@ -149,28 +177,21 @@ export default function WelcomeScreen() {
         </View>
 
         <TouchableOpacity
-          style={[styles.nextButton, { backgroundColor: "#007AFF" }]}
+          style={[styles.nextButton, { backgroundColor: theme.colors.primary }]}
           onPress={handleNext}
         >
           <Icon
-            name={
-              currentScreen < screens.length - 1
-                ? "arrow-right"
-                : "check-circle"
-            }
+            name={currentScreen < screens.length - 1 ? "right" : "check"}
             size={24}
             color="#FFFFFF"
           />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </SafeAreaBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",

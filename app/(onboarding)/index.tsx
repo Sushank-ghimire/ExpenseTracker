@@ -10,10 +10,11 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/Feather";
+import SafeAreaBackground from "@/components/SafeAreaBackground";
+import Storage from "expo-sqlite/kv-store";
 
 export default function SplashScreen() {
-  const [isFirstLaunch] = useState(true); // ✅ Set to false if onboarding is complete
-
+  const [isFirstLaunch] = useState(Storage.getItemSync("isVisited"));
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.8);
   const textOpacity = useSharedValue(0);
@@ -56,16 +57,18 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: "#FFFFFF" }]}>
-      <Animated.View style={iconAnimatedStyle}>
-        <Icon name="credit-card" size={80} color="#007AFF" />
-      </Animated.View>
-      <Animated.Text
-        style={[styles.title, { color: "#222222" }, textAnimatedStyle]}
-      >
-        WalletWise
-      </Animated.Text>
-    </View>
+    <SafeAreaBackground>
+      <View style={[styles.container]}>
+        <Animated.View style={iconAnimatedStyle}>
+          <Icon name="credit-card" size={80} color="#007AFF" />
+        </Animated.View>
+        <Animated.Text
+          style={[styles.title, { color: "white" }, textAnimatedStyle]}
+        >
+          WalletWise
+        </Animated.Text>
+      </View>
+    </SafeAreaBackground>
   );
 }
 

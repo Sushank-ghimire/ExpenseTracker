@@ -30,13 +30,20 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <StatusBar backgroundColor={"#4F46E5"} barStyle={"light-content"} />
+      <StatusBar backgroundColor={"#111827"} barStyle={"light-content"} />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="(onboarding)"
           options={{ animation: "slide_from_bottom" }}
         />
         <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
+        <Stack.Screen
+          name="modal"
+          options={{
+            presentation: "modal",
+            animation: "fade_from_bottom",
+          }}
+        />
         <Stack.Screen name="+not-found" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>
