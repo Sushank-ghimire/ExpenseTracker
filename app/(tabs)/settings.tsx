@@ -15,6 +15,10 @@ import { Feather, AntDesign } from "@expo/vector-icons";
 import { useTheme } from "@/providers/ThemeProvider";
 import { useUser } from "@/store/useUser";
 import { useRouter } from "expo-router";
+import Constants from "expo-constants";
+
+const appVersion =
+  Constants.expoConfig?.version || Constants.manifest?.version || "1.0.0";
 
 const settings = () => {
   const { getUserDetails, updateProfile } = useUser();
@@ -111,8 +115,8 @@ const settings = () => {
             <Image
               source={{
                 uri:
-                  profileImage ||
                   image ||
+                  profileImage ||
                   "https://images.pexels.com/photos/8873476/pexels-photo-8873476.jpeg",
               }}
               style={styles.profileImage}
@@ -261,7 +265,7 @@ const settings = () => {
           <Text
             style={[styles.versionText, { color: theme.colors.textSecondary }]}
           >
-            Version 1.0.0
+            Version {appVersion}
           </Text>
         </View>
       </ScrollView>
@@ -320,16 +324,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 4,
   },
-  profileEmail: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 14,
-  },
   sectionTitle: {
     paddingHorizontal: 24,
     marginBottom: 8,
   },
   sectionTitleText: {
-    fontFamily: "Poppins-Medium",
     fontSize: 14,
     textTransform: "uppercase",
   },
@@ -368,7 +367,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   versionText: {
-    fontFamily: "Poppins-Regular",
     fontSize: 14,
     textAlign: "center",
     marginBottom: 32,
@@ -393,9 +391,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
     marginTop: 10,
+    width: "50%",
+    marginHorizontal: "auto",
+    textAlign: "center",
   },
   editButtonText: {
     color: "#fff",
     fontWeight: "bold",
+    textAlign: "center",
   },
 });

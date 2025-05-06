@@ -1,8 +1,11 @@
+import HeaderLeft from "@/components/homepage/HeaderLeft";
+import HeaderRight from "@/components/homepage/HeaderRight";
 import TabBarIcons from "@/components/TabBarIcons";
 import DatabaseProvider from "@/providers/DatabaseProvider";
 import { useTheme } from "@/providers/ThemeProvider";
+import { useUser } from "@/store/useUser";
 import { Tabs, useRouter } from "expo-router";
-import { TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, Image } from "react-native";
 import { StatusBar, View } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 
@@ -37,7 +40,7 @@ const TabsLayout = () => {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Home",
+            title: "",
             headerShown: true,
             tabBarIcon: ({ color, focused, size }) => (
               <TabBarIcons
@@ -53,22 +56,11 @@ const TabsLayout = () => {
             headerTitleStyle: {
               color: theme.colors.text,
             },
-            headerRight: ({ pressColor, pressOpacity }) => (
-              <View
-                style={{
-                  width: "auto",
-                  padding: 8,
-                  justifyContent: "flex-end",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={handleNotificationPress}
-                  style={{ shadowColor: pressColor, opacity: pressOpacity }}
-                >
-                  <Icon name="bells" color={theme.colors.text} size={28} />
-                </TouchableOpacity>
-              </View>
+            headerRight: () => (
+              <HeaderRight handleNotificationPress={handleNotificationPress} />
             ),
+            headerLeft: () => <HeaderLeft />,
+            tabBarLabel: "Home",
           }}
         />
 
