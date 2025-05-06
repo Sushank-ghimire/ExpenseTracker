@@ -39,7 +39,6 @@ export default function RootLayout() {
           statusBarAnimation: "fade",
           freezeOnBlur: true,
           headerTransparent: true,
-          keyboardHandlingEnabled: true,
           headerShadowVisible: false,
           animationTypeForReplace: "push",
           headerBackVisible: true,
