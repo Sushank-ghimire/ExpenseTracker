@@ -47,9 +47,9 @@ export default function SplashScreen() {
 
     const timeout = setTimeout(() => {
       if (isFirstLaunch) {
-        router.replace("/(onboarding)/welcome");
+        router.push("/(onboarding)/welcome");
       } else {
-        router.replace("/(tabs)");
+        router.push("/(tabs)");
       }
     }, 2500);
 
