@@ -18,33 +18,12 @@ import {
   FontAwesome,
   AntDesign,
 } from "@expo/vector-icons";
+import { useTheme } from "@/providers/ThemeProvider";
 
-export default function SettingsScreen({
-  // Theme related props
-  isDarkMode = false,
-  toggleTheme = () => {},
-  colors = {
-    background: "#FFFFFF",
-    text: "#000000",
-    textSecondary: "#6B7280",
-    card: "#F3F4F6",
-    primary: "#4F46E5",
-    primaryLight: "#E0E7FF",
-    error: "#EF4444",
-  },
-  // Database related props
-  user = {
-    name: "User",
-    email: "user@example.com",
-    profileImage: null,
-  },
-  updateUserProfile = () => {},
-  exportData = async () => {},
-  importData = async () => {},
-  resetAllData = () => {},
-  onLogout = () => {},
-}) {
+const settings = () => {
   const [showColorPicker, setShowColorPicker] = useState(false);
+
+  const { theme, isDarkMode, toggleTheme } = useTheme();
 
   const pickImage = async () => {
     const permissionResult =
@@ -66,273 +45,203 @@ export default function SettingsScreen({
     });
 
     if (!result.canceled) {
+      console.log(result);
     }
+  };
 
-    const handleCustomTheme = () => {
-      setShowColorPicker(true);
-    };
+  const exportData = async () => {};
 
-    const handleExport = async () => {
-      try {
-        const result = await exportData();
-        Alert.alert(
-          "Data Exported",
-          `Your data has been exported successfully to: ${result}`
-        );
-      } catch (error) {
-        if (error instanceof Error) Alert.alert("Export Failed", error.message);
-      }
-    };
+  const handleCustomTheme = () => {
+    setShowColorPicker(true);
+  };
 
-    const handleImport = async () => {
-      try {
-        await importData();
-        Alert.alert(
-          "Data Imported",
-          "Your data has been imported successfully."
-        );
-      } catch (error) {
-        if (error instanceof Error) Alert.alert("Import Failed", error.message);
-      }
-    };
-
-    const handleReset = () => {
+  const handleExport = async () => {
+    try {
+      const result = await exportData();
       Alert.alert(
-        "Reset All Data",
-        "Are you sure you want to reset all data? This action cannot be undone.",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Reset",
-            style: "destructive",
-            onPress: () => {
-              resetAllData();
-              Alert.alert(
-                "Data Reset",
-                "All data has been reset successfully."
-              );
-            },
-          },
-        ]
+        "Data Exported",
+        `Your data has been exported successfully to: ${result}`
       );
-    };
-
-    return (
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: colors.background }]}
+    } catch (error) {
+      if (error instanceof Error) Alert.alert("Export Failed", error.message);
+    }
+  };
+  return (
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
         <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>
+          <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
             Settings
           </Text>
         </View>
 
-        <ScrollView
-          style={styles.scrollView}
-          showsVerticalScrollIndicator={false}
+        {/* User Profile */}
+
+        {/* Appereance */}
+        <View style={styles.sectionTitle}>
+          <Text
+            style={[
+              styles.sectionTitleText,
+              { color: theme.colors.textSecondary },
+            ]}
+          >
+            Appearance
+          </Text>
+        </View>
+        <View
+          style={[styles.settingsGroup, { backgroundColor: theme.colors.card }]}
         >
-          <View
-            style={[styles.profileSection, { backgroundColor: colors.card }]}
-          >
-            <TouchableOpacity
-              style={styles.profileImageContainer}
-              onPress={pickImage}
-            >
-              <Image
-                source={{
-                  uri:
-                    user.profileImage ||
-                    "https://images.pexels.com/photos/8873476/pexels-photo-8873476.jpeg",
-                }}
-                style={styles.profileImage}
-              />
-              <View style={styles.cameraButton}>
-                <FontAwesome name="camera" size={16} color="#fff" />
-              </View>
-            </TouchableOpacity>
-
-            <Text style={[styles.profileName, { color: colors.text }]}>
-              {user.name}
-            </Text>
-            <Text
-              style={[styles.profileEmail, { color: colors.textSecondary }]}
-            >
-              {user.email}
-            </Text>
-          </View>
-
-          <View style={styles.sectionTitle}>
-            <Text
-              style={[styles.sectionTitleText, { color: colors.textSecondary }]}
-            >
-              Appearance
-            </Text>
-          </View>
-
-          <View
-            style={[styles.settingsGroup, { backgroundColor: colors.card }]}
-          >
-            <View style={styles.settingItem}>
-              <View style={styles.settingLabelContainer}>
-                <View
-                  style={[
-                    styles.settingIconContainer,
-                    { backgroundColor: colors.primaryLight },
-                  ]}
-                >
-                  {isDarkMode ? (
-                    <Ionicons name="moon" size={20} color={colors.primary} />
-                  ) : (
-                    <Feather name="sun" size={20} color={colors.primary} />
-                  )}
-                </View>
-                <Text style={[styles.settingLabel, { color: colors.text }]}>
-                  Dark Mode
-                </Text>
-              </View>
-              <Switch
-                value={isDarkMode}
-                onValueChange={toggleTheme}
-                trackColor={{ false: "#767577", true: colors.primaryLight }}
-                thumbColor={isDarkMode ? colors.primary : "#f4f3f4"}
-              />
-            </View>
-
-            <View style={styles.divider} />
-
-            <TouchableOpacity
-              style={styles.settingItem}
-              onPress={handleCustomTheme}
-            >
-              <View style={styles.settingLabelContainer}>
-                <View
-                  style={[
-                    styles.settingIconContainer,
-                    { backgroundColor: colors.primaryLight },
-                  ]}
-                >
-                  <MaterialIcons
-                    name="color-lens"
+          <View style={styles.settingItem}>
+            <View style={styles.settingLabelContainer}>
+              <View
+                style={[
+                  styles.settingIconContainer,
+                  { backgroundColor: theme.colors.primaryLight },
+                ]}
+              >
+                {isDarkMode ? (
+                  <Ionicons
+                    name="moon"
                     size={20}
-                    color={colors.primary}
+                    color={theme.colors.primary}
                   />
-                </View>
-                <Text style={[styles.settingLabel, { color: colors.text }]}>
-                  Custom Theme
-                </Text>
+                ) : (
+                  <Feather name="sun" size={20} color={theme.colors.primary} />
+                )}
               </View>
-              <Feather
-                name="chevron-right"
-                size={20}
-                color={colors.textSecondary}
-              />
-            </TouchableOpacity>
+              <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
+                Dark Mode
+              </Text>
+            </View>
+            <Switch
+              value={isDarkMode}
+              onValueChange={toggleTheme}
+              trackColor={{ false: "#767577", true: theme.colors.primaryLight }}
+              thumbColor={isDarkMode ? theme.colors.primary : "#f4f3f4"}
+            />
           </View>
+        </View>
 
-          <View style={styles.sectionTitle}>
-            <Text
-              style={[styles.sectionTitleText, { color: colors.textSecondary }]}
-            >
-              Data Management
-            </Text>
-          </View>
-
-          <View
-            style={[styles.settingsGroup, { backgroundColor: colors.card }]}
+        {/* Data Management */}
+        <View style={styles.sectionTitle}>
+          <Text
+            style={[
+              styles.sectionTitleText,
+              { color: theme.colors.textSecondary },
+            ]}
           >
-            <TouchableOpacity style={styles.settingItem} onPress={handleExport}>
-              <View style={styles.settingLabelContainer}>
-                <View
-                  style={[
-                    styles.settingIconContainer,
-                    { backgroundColor: colors.primaryLight },
-                  ]}
-                >
-                  <Feather name="download" size={20} color={colors.primary} />
-                </View>
-                <Text style={[styles.settingLabel, { color: colors.text }]}>
-                  Export Data
-                </Text>
+            Data Management
+          </Text>
+        </View>
+
+        <View
+          style={[styles.settingsGroup, { backgroundColor: theme.colors.card }]}
+        >
+          {/* Data Export */}
+          <TouchableOpacity style={styles.settingItem} onPress={handleExport}>
+            <View style={styles.settingLabelContainer}>
+              <View
+                style={[
+                  styles.settingIconContainer,
+                  { backgroundColor: theme.colors.primaryLight },
+                ]}
+              >
+                <Feather
+                  name="download"
+                  size={20}
+                  color={theme.colors.primary}
+                />
               </View>
-              <Feather
-                name="chevron-right"
-                size={20}
-                color={colors.textSecondary}
-              />
-            </TouchableOpacity>
+              <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
+                Export Data
+              </Text>
+            </View>
+            <Feather
+              name="chevron-right"
+              size={20}
+              color={theme.colors.textSecondary}
+            />
+          </TouchableOpacity>
 
-            <View style={styles.divider} />
+          {/* Divider */}
+          <View style={styles.divider} />
 
-            <TouchableOpacity style={styles.settingItem} onPress={handleImport}>
-              <View style={styles.settingLabelContainer}>
-                <View
-                  style={[
-                    styles.settingIconContainer,
-                    { backgroundColor: colors.primaryLight },
-                  ]}
-                >
-                  <Feather name="upload" size={20} color={colors.primary} />
-                </View>
-                <Text style={[styles.settingLabel, { color: colors.text }]}>
-                  Import Data
-                </Text>
+          {/* Data Import */}
+          <TouchableOpacity style={styles.settingItem}>
+            <View style={styles.settingLabelContainer}>
+              <View
+                style={[
+                  styles.settingIconContainer,
+                  { backgroundColor: theme.colors.primaryLight },
+                ]}
+              >
+                <Feather name="upload" size={20} color={theme.colors.primary} />
               </View>
-              <Feather
-                name="chevron-right"
-                size={20}
-                color={colors.textSecondary}
-              />
-            </TouchableOpacity>
+              <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
+                Import Data
+              </Text>
+            </View>
+            <Feather
+              name="chevron-right"
+              size={20}
+              color={theme.colors.textSecondary}
+            />
+          </TouchableOpacity>
 
-            <View style={styles.divider} />
+          {/* Divider */}
+          <View style={styles.divider} />
 
-            <TouchableOpacity style={styles.settingItem} onPress={handleReset}>
-              <View style={styles.settingLabelContainer}>
-                <View
-                  style={[
-                    styles.settingIconContainer,
-                    { backgroundColor: "#FECACA" },
-                  ]}
-                >
-                  <Feather name="trash-2" size={20} color="#DC2626" />
-                </View>
-                <Text style={[styles.settingLabel, { color: colors.text }]}>
-                  Reset All Data
-                </Text>
+          {/* Reset All Data */}
+          <TouchableOpacity style={styles.settingItem}>
+            <View style={styles.settingLabelContainer}>
+              <View
+                style={[
+                  styles.settingIconContainer,
+                  { backgroundColor: "#FECACA" },
+                ]}
+              >
+                <Feather name="trash-2" size={20} color="#DC2626" />
               </View>
-              <Feather
-                name="chevron-right"
-                size={20}
-                color={colors.textSecondary}
-              />
-            </TouchableOpacity>
-          </View>
+              <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
+                Reset All Data
+              </Text>
+            </View>
+            <Feather
+              name="chevron-right"
+              size={20}
+              color={theme.colors.textSecondary}
+            />
+          </TouchableOpacity>
 
+          {/* Logout */}
           <TouchableOpacity
-            style={[styles.logoutButton, { backgroundColor: colors.error }]}
-            onPress={onLogout}
+            style={[
+              styles.logoutButton,
+              { backgroundColor: theme.colors.error },
+            ]}
           >
             <AntDesign name="logout" size={20} color="#fff" />
             <Text style={styles.logoutText}>Log Out</Text>
           </TouchableOpacity>
 
-          <Text style={[styles.versionText, { color: colors.textSecondary }]}>
+          <Text
+            style={[styles.versionText, { color: theme.colors.textSecondary }]}
+          >
             Version 1.0.0
           </Text>
-        </ScrollView>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
-        {/* <ThemeColorPicker
-        visible={showColorPicker}
-        onClose={() => setShowColorPicker(false)}
-        onSelectColor={(color) => {
-          setCustomColor(color);
-          setShowColorPicker(false);
-        }}
-      /> */}
-      </SafeAreaView>
-    );
-  };
-}
+export default settings;
 
 const styles = StyleSheet.create({
   container: {
@@ -379,10 +288,12 @@ const styles = StyleSheet.create({
     borderColor: "white",
   },
   profileName: {
+    fontFamily: "Poppins-SemiBold",
     fontSize: 20,
     marginBottom: 4,
   },
   profileEmail: {
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
   },
   sectionTitle: {
@@ -390,6 +301,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionTitleText: {
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     textTransform: "uppercase",
   },
@@ -419,6 +331,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   settingLabel: {
+    fontFamily: "Poppins-Medium",
     fontSize: 16,
   },
   divider: {
@@ -436,11 +349,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   logoutText: {
+    fontFamily: "Poppins-Medium",
     fontSize: 16,
     color: "#fff",
     marginLeft: 8,
   },
   versionText: {
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
     textAlign: "center",
     marginBottom: 32,

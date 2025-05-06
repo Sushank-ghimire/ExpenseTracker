@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
+import SafeAreaBackground from "@/components/SafeAreaBackground";
+import ThemeText from "@/components/ThemeText";
 
 const ExpenseDashboard = () => {
   return (
-    <View>
-      <Text>ExpenseDashboard</Text>
-    </View>
+    <SafeAreaBackground>
+      <ThemeText text="Dashboard Page" isPrimary={true} />
+    </SafeAreaBackground>
   );
 };
 

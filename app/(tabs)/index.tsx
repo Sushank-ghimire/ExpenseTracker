@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
+import SafeAreaBackground from "@/components/SafeAreaBackground";
+import ThemeText from "@/components/ThemeText";
 
 const HomePage = () => {
   return (
-    <View>
-      <Text>HomePage</Text>
-    </View>
+    <SafeAreaBackground>
+      <ThemeText text="Index Page" isPrimary={true} />
+    </SafeAreaBackground>
   );
 };
 
