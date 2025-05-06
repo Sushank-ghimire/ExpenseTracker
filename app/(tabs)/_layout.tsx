@@ -3,14 +3,13 @@ import HeaderRight from "@/components/homepage/HeaderRight";
 import TabBarIcons from "@/components/TabBarIcons";
 import DatabaseProvider from "@/providers/DatabaseProvider";
 import { useTheme } from "@/providers/ThemeProvider";
-import { useUser } from "@/store/useUser";
 import { Tabs, useRouter } from "expo-router";
-import { Text, TouchableOpacity, Image } from "react-native";
-import { StatusBar, View } from "react-native";
-import Icon from "react-native-vector-icons/AntDesign";
+import { useColorScheme } from "react-native";
+import { StatusBar } from "react-native";
 
 const TabsLayout = () => {
   const { theme, isDarkMode } = useTheme();
+  const mobileTheme = useColorScheme();
   const router = useRouter();
   const handleNotificationPress = () => {
     router.push("/modal");
@@ -26,7 +25,7 @@ const TabsLayout = () => {
       <Tabs
         screenOptions={{
           headerShown: false,
-          animation: "none",
+          animation: mobileTheme === "light" ? "shift" : "none",
           tabBarStyle: {
             height: 60,
             backgroundColor: theme.colors.background,

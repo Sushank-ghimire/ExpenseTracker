@@ -12,8 +12,10 @@ import Animated, {
 import Icon from "react-native-vector-icons/Feather";
 import SafeAreaBackground from "@/components/SafeAreaBackground";
 import Storage from "expo-sqlite/kv-store";
+import { useTheme } from "@/providers/ThemeProvider";
 
 export default function SplashScreen() {
+  const { theme } = useTheme();
   const [isFirstLaunch] = useState(Storage.getItemSync("isVisited"));
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.8);
@@ -44,14 +46,13 @@ export default function SplashScreen() {
       withDelay(300, withTiming(1, { duration: 800 })),
       withDelay(1200, withTiming(0, { duration: 400 }))
     );
-
     const timeout = setTimeout(() => {
       if (isFirstLaunch) {
         router.push("/(onboarding)/welcome");
       } else {
         router.push("/(tabs)");
       }
-    }, 2500);
+    }, 2000);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -63,7 +64,11 @@ export default function SplashScreen() {
           <Icon name="credit-card" size={80} color="#007AFF" />
         </Animated.View>
         <Animated.Text
-          style={[styles.title, { color: "white" }, textAnimatedStyle]}
+          style={[
+            styles.title,
+            { color: theme.colors.text },
+            textAnimatedStyle,
+          ]}
         >
           WalletWise
         </Animated.Text>

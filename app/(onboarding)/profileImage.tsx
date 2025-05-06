@@ -33,7 +33,11 @@ const ImageView = () => {
             }
           }}
         >
-          <Ionicons name="arrow-back-outline" size={28} color="white" />
+          <Ionicons
+            name="arrow-back-outline"
+            size={28}
+            color={theme.colors.text}
+          />
         </TouchableOpacity>
 
         {/* Profile Image */}

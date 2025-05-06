@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Stack } from "expo-router";
-import { StatusBar } from "react-native";
+import { StatusBar, useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
 import ThemeProvider from "@/providers/ThemeProvider";
@@ -28,13 +28,29 @@ export default function RootLayout() {
     return null;
   }
 
+  const theme = useColorScheme();
+
   return (
     <ThemeProvider>
       <StatusBar backgroundColor={"#111827"} barStyle={"light-content"} />
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          statusBarAnimation: "fade",
+          freezeOnBlur: true,
+          headerTransparent: true,
+          keyboardHandlingEnabled: true,
+          headerShadowVisible: false,
+          animationTypeForReplace: "push",
+          headerBackVisible: true,
+          headerBlurEffect: "regular",
+        }}
+      >
         <Stack.Screen
           name="(onboarding)"
-          options={{ animation: "slide_from_bottom" }}
+          options={{
+            animation: theme === "light" ? "slide_from_bottom" : "default",
+          }}
         />
         <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
         <Stack.Screen
