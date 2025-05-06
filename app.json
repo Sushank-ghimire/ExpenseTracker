@@ -44,6 +44,14 @@
             "useSQLCipher": false
           }
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "custom photos permission",
+          "cameraPermission": "Allow us to open the camera",
+          "microphonePermission": true
+        }
       ]
     ],
     "experiments": {
