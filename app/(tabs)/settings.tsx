@@ -3,27 +3,41 @@ import {
   StyleSheet,
   View,
   Text,
-  Switch,
   TouchableOpacity,
   ScrollView,
   Alert,
   Image,
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import {
-  Ionicons,
-  MaterialIcons,
-  Feather,
-  FontAwesome,
-  AntDesign,
-} from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 import { useTheme } from "@/providers/ThemeProvider";
+import { useUser } from "@/store/useUser";
+import { useRouter } from "expo-router";
 
 const settings = () => {
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const { getUserDetails, updateProfile } = useUser();
 
-  const { theme, isDarkMode, toggleTheme } = useTheme();
+  const router = useRouter();
+
+  const { name, profileImage } = getUserDetails();
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const onLongPress = () => {
+    router.push("/(onboarding)/profileImage");
+  };
+
+  const [userName, setUsername] = useState("");
+
+  const [image, setProfileImage] = useState("");
+
+  const { theme } = useTheme();
+
+  const updateUserProfile = () => {
+    updateProfile(image, userName);
+  };
 
   const pickImage = async () => {
     const permissionResult =
@@ -45,15 +59,11 @@ const settings = () => {
     });
 
     if (!result.canceled) {
-      console.log(result);
+      setProfileImage(result.assets[0].uri);
     }
   };
 
   const exportData = async () => {};
-
-  const handleCustomTheme = () => {
-    setShowColorPicker(true);
-  };
 
   const handleExport = async () => {
     try {
@@ -66,6 +76,7 @@ const settings = () => {
       if (error instanceof Error) Alert.alert("Export Failed", error.message);
     }
   };
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -82,50 +93,78 @@ const settings = () => {
         </View>
 
         {/* User Profile */}
-
-        {/* Appereance */}
-        <View style={styles.sectionTitle}>
-          <Text
-            style={[
-              styles.sectionTitleText,
-              { color: theme.colors.textSecondary },
-            ]}
-          >
-            Appearance
-          </Text>
-        </View>
         <View
-          style={[styles.settingsGroup, { backgroundColor: theme.colors.card }]}
+          style={[
+            styles.profileSection,
+            { backgroundColor: theme.colors.card },
+          ]}
         >
-          <View style={styles.settingItem}>
-            <View style={styles.settingLabelContainer}>
-              <View
-                style={[
-                  styles.settingIconContainer,
-                  { backgroundColor: theme.colors.primaryLight },
-                ]}
-              >
-                {isDarkMode ? (
-                  <Ionicons
-                    name="moon"
-                    size={20}
-                    color={theme.colors.primary}
-                  />
-                ) : (
-                  <Feather name="sun" size={20} color={theme.colors.primary} />
-                )}
-              </View>
-              <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
-                Dark Mode
-              </Text>
-            </View>
-            <Switch
-              value={isDarkMode}
-              onValueChange={toggleTheme}
-              trackColor={{ false: "#767577", true: theme.colors.primaryLight }}
-              thumbColor={isDarkMode ? theme.colors.primary : "#f4f3f4"}
+          <TouchableOpacity
+            style={styles.profileImageContainer}
+            onPress={() => {
+              if (isEditing) {
+                pickImage();
+              }
+            }}
+            onLongPress={onLongPress}
+          >
+            <Image
+              source={{
+                uri:
+                  profileImage ||
+                  image ||
+                  "https://images.pexels.com/photos/8873476/pexels-photo-8873476.jpeg",
+              }}
+              style={styles.profileImage}
             />
-          </View>
+            <View style={styles.cameraButton}>
+              <AntDesign name="camera" size={16} color="#fff" />
+            </View>
+          </TouchableOpacity>
+
+          {/* Name or Editable TextInput */}
+          {isEditing ? (
+            <TextInput
+              value={userName}
+              onChangeText={setUsername}
+              placeholder="Enter username"
+              placeholderTextColor="#ccc"
+              style={[
+                {
+                  padding: 13,
+                  width: "80%",
+                  margin: "auto",
+                  flex: 1,
+                  backgroundColor: theme.colors.background,
+                  borderRadius: 2,
+                  color: "white",
+                },
+              ]}
+            />
+          ) : (
+            <Text
+              style={[
+                { color: theme.colors.text, fontSize: 20, textAlign: "left" },
+              ]}
+            >
+              {name}
+            </Text>
+          )}
+
+          {/* Edit / Save Button */}
+          <TouchableOpacity
+            onPress={() => {
+              setIsEditing((prev) => !prev);
+              if (isEditing) {
+                updateUserProfile();
+              }
+            }}
+            style={styles.editButton}
+          >
+            <Text style={styles.editButtonText}>
+              {isEditing ? "Save" : "Edit"}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Data Management */}
@@ -217,17 +256,6 @@ const settings = () => {
               size={20}
               color={theme.colors.textSecondary}
             />
-          </TouchableOpacity>
-
-          {/* Logout */}
-          <TouchableOpacity
-            style={[
-              styles.logoutButton,
-              { backgroundColor: theme.colors.error },
-            ]}
-          >
-            <AntDesign name="logout" size={20} color="#fff" />
-            <Text style={styles.logoutText}>Log Out</Text>
           </TouchableOpacity>
 
           <Text
@@ -339,25 +367,35 @@ const styles = StyleSheet.create({
     backgroundColor: "#E5E7EB",
     marginHorizontal: 16,
   },
-  logoutButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 24,
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginBottom: 24,
-  },
-  logoutText: {
-    fontFamily: "Poppins-Medium",
-    fontSize: 16,
-    color: "#fff",
-    marginLeft: 8,
-  },
   versionText: {
     fontFamily: "Poppins-Regular",
     fontSize: 14,
     textAlign: "center",
     marginBottom: 32,
+  },
+  input: {
+    width: "100%",
+    padding: 10,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    marginVertical: 10,
+    backgroundColor: "#fff",
+  },
+  nameText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+  editButton: {
+    backgroundColor: "#007AFF",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  editButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

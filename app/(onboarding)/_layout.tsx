@@ -1,6 +1,5 @@
 import React from "react";
 import { Stack } from "expo-router";
-import { Text } from "react-native";
 
 const OnboardingLayout = () => {
   return (
@@ -15,6 +14,7 @@ const OnboardingLayout = () => {
         }}
       />
       <Stack.Screen name="welcome" options={{ headerShown: false }} />
+      <Stack.Screen name="profileImage" options={{ headerShown: false }} />
     </Stack>
   );
 };

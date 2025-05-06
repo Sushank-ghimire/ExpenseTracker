@@ -23,7 +23,7 @@ const TabsLayout = () => {
       <Tabs
         screenOptions={{
           headerShown: false,
-          animation: "shift",
+          animation: "none",
           tabBarStyle: {
             height: 60,
             backgroundColor: theme.colors.background,
@@ -31,6 +31,7 @@ const TabsLayout = () => {
           tabBarActiveTintColor: theme.colors.text,
           tabBarInactiveTintColor: theme.colors.textSecondary,
           tabBarAllowFontScaling: true,
+          tabBarHideOnKeyboard: true,
         }}
       >
         <Tabs.Screen

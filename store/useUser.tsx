@@ -1,57 +1,29 @@
 import { create } from "zustand";
-import * as SQLite from "expo-sqlite";
-import { UserProfile } from "@/types";
+import { Storage } from "expo-sqlite/kv-store";
 
-const db = await SQLite.openDatabaseAsync("user");
-
-await db.execAsync(`
-   CREATE TABLE IF NOT EXISTS user (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      profileImage TEXT
-    );
- `);
-
-type User = {
-  id: number;
+interface UserProfile {
   name: string;
-  profileImage: string;
-};
+  profileImage: string | null;
+}
 
-export const useUser = create<UserProfile>((set) => ({
-  name: "User",
-  profileImage: null,
-  getUserData: async () => {
-    const user = (await db.getFirstAsync("SELECT * FROM user")) as User;
-    if (!user) {
-      await db.runAsync(
-        "INSERT INTO user (name, profileImage) VALUES (?, ?)",
-        "Guest",
-        ""
-      );
-      set({ name: "Guest", profileImage: null });
-    }
-    set({
-      name: user.name,
-      profileImage: user.profileImage,
-    });
+interface UseUserTypes {
+  updateProfile: (profileImage: string, name: string) => Promise<void>;
+  getUserDetails: () => UserProfile;
+}
+
+export const useUser = create<UseUserTypes>(() => ({
+  updateProfile: async (image?: string, name?: string) => {
+    if (image) Storage.setItemSync("image", image);
+    if (name) Storage.setItemSync("name", name);
   },
-  updateProfile: async (image: string, name?: string) => {
-    if (image) {
-      await db.runAsync(
-        "UPDATE user SET profileImage = ? WHERE id = 1;",
-        image
-      );
-      set({ profileImage: image });
-    }
-    if (image && name) {
-      await db.runAsync(
-        "UPDATE user SET profileImage = ?, name = ? WHERE id = 1;",
-        image,
-        name
-      );
-      set({ profileImage: image, name: name });
-    }
-    set({ name: name });
+  getUserDetails: () => {
+    const profileImage =
+      Storage.getItemSync("image") ||
+      "https://images.pexels.com/photos/8873476/pexels-photo-8873476.jpeg";
+    const name = Storage.getItemSync("name") || "User";
+    return {
+      profileImage,
+      name,
+    };
   },
 }));
