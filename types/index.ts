@@ -1,8 +1,4 @@
-export interface DatabaseContextType {
-  isFirstLaunch: boolean;
-  completeOnboarding: () => void;
-  getUserProfile: () => UserProfile;
-  updateUserProfile: (profile: UserProfile) => void;
+export interface DatabaseType {
   getTransactions: (limit?: number) => Transaction[];
   addTransaction: (transaction: Omit<Transaction, "id">) => void;
   deleteTransaction: (id: string) => void;

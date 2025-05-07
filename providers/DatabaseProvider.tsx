@@ -8,11 +8,7 @@ const DatabaseProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Mobile platforms (iOS/Android) - wrap with SQLiteProvider
-  return (
-    <SQLiteProvider databaseName="user.db">
-      <SQLiteProvider databaseName="expenses.db">{children}</SQLiteProvider>
-    </SQLiteProvider>
-  );
+  return <SQLiteProvider databaseName="expenses.db">{children}</SQLiteProvider>;
 };
 
 export default DatabaseProvider;
