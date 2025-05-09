@@ -8,29 +8,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 
 const index = () => {
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const spent = 450;
   const budget = 1000;
   const income = 2500;
   const expenses = 800;
-
-  const budgetPercentage =
-    budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
-
-  const expenseCategories = [
-    { id: 1, name: "Food", amount: 200, color: "#FF6384" },
-    { id: 2, name: "Transport", amount: 150, color: "#36A2EB" },
-    { id: 3, name: "Shopping", amount: 100, color: "#FFCE56" },
-    { id: 4, name: "Bills", amount: 80, color: "#4BC0C0" },
-  ];
-
-  const transactions = [
-    { id: 1, title: "Grocery Store", amount: -50, date: "May 5" },
-    { id: 2, title: "Uber Ride", amount: -20, date: "May 4" },
-    { id: 3, title: "Salary", amount: 1500, date: "May 3" },
-    { id: 4, title: "Coffee", amount: -5, date: "May 2" },
-    { id: 5, title: "Electricity Bill", amount: -120, date: "May 1" },
-  ];
 
   return (
     <SafeAreaBackground>
@@ -74,11 +56,7 @@ const index = () => {
             entering={FadeInDown.delay(200).duration(500)}
           >
             <View style={styles.summaryIconContainer}>
-              <AntDesign
-                name="arrowup"
-                size={24}
-                style={{ color: theme.colors.text }}
-              />
+              <AntDesign name="arrowup" size={24} style={{ color: "#fff" }} />
             </View>
             <View>
               <Text style={styles.summaryLabel}>Income</Text>
@@ -94,12 +72,7 @@ const index = () => {
             entering={FadeInDown.delay(300).duration(500)}
           >
             <View style={styles.summaryIconContainer}>
-              {" "}
-              <AntDesign
-                name="arrowdown"
-                size={24}
-                style={{ color: theme.colors.text }}
-              />
+              <AntDesign name="arrowdown" size={24} style={{ color: "#fff" }} />
             </View>
             <View>
               <Text style={styles.summaryLabel}>Expenses</Text>

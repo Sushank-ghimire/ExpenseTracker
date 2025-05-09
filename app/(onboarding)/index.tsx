@@ -16,7 +16,6 @@ import { useTheme } from "@/providers/ThemeProvider";
 
 export default function SplashScreen() {
   const { theme } = useTheme();
-  const [isFirstLaunch] = useState(Storage.getItemSync("isVisited"));
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.8);
   const textOpacity = useSharedValue(0);
@@ -47,11 +46,7 @@ export default function SplashScreen() {
       withDelay(1200, withTiming(0, { duration: 400 }))
     );
     const timeout = setTimeout(() => {
-      if (isFirstLaunch) {
-        router.push("/(onboarding)/welcome");
-      } else {
-        router.push("/(tabs)");
-      }
+      router.push("/(onboarding)/welcome");
     }, 2000);
 
     return () => clearTimeout(timeout);
