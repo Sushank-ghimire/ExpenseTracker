@@ -60,6 +60,7 @@ const TabsLayout = () => {
             ),
             headerLeft: () => <HeaderLeft />,
             tabBarLabel: "Home",
+            headerShadowVisible: false,
           }}
         />
 

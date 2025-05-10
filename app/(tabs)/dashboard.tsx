@@ -24,11 +24,11 @@ import {
 } from "@expo/vector-icons";
 import { useTheme } from "@/providers/ThemeProvider";
 import SafeAreaBackground from "@/components/SafeAreaBackground";
-import UniversalModal from "@/components/modal/CustomAlertModel";
+import { useExpenseTrack } from "@/store/useExpense";
 
 const ExpenseDashboard = () => {
   const { theme } = useTheme();
-  // Dummy categories
+  const { addTransaction } = useExpenseTrack();
   const dummyCategories = {
     expense: [
       {
@@ -177,10 +177,7 @@ const ExpenseDashboard = () => {
       );
       return;
     }
-    handleAlertMessageAndModel(
-      "Transaction Saved",
-      "This is a dummy save action."
-    );
+    addTransaction(+amount, description, selectedType, selectedCategory);
   };
   return (
     <SafeAreaBackground>

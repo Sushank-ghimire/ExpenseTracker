@@ -66,7 +66,9 @@ export default function WelcomeScreen() {
   const [alreadyUsed] = useState(Storage.getItemSync("isVisited"));
 
   if (alreadyUsed) {
-    router.push("/(tabs)");
+    setTimeout(() => {
+      router.push("/(tabs)");
+    }, 1000);
   }
 
   const handleNext = () => {
@@ -78,13 +80,13 @@ export default function WelcomeScreen() {
       });
     } else {
       completeOnboarding();
-      router.replace("/(tabs)");
+      router.push("/(tabs)");
     }
   };
 
   const handleSkip = () => {
     completeOnboarding();
-    router.replace("/(tabs)");
+    router.push("/(tabs)");
   };
 
   return (
