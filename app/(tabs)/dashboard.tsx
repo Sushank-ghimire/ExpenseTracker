@@ -28,7 +28,8 @@ import { useExpenseTrack } from "@/store/useExpense";
 
 const ExpenseDashboard = () => {
   const { theme } = useTheme();
-  const { addTransaction } = useExpenseTrack();
+  const { addTransaction, isLoading } = useExpenseTrack();
+
   const dummyCategories = {
     expense: [
       {
@@ -69,6 +70,12 @@ const ExpenseDashboard = () => {
         ),
         color: "#3b8aae",
       },
+      {
+        id: "others",
+        name: "Others",
+        icon: <AntDesign name="meh" size={16} color={theme.colors.text} />,
+        color: "#3b3abc",
+      },
     ],
     income: [
       {
@@ -100,6 +107,12 @@ const ExpenseDashboard = () => {
           />
         ),
         color: "#3b8aae",
+      },
+      {
+        id: "others",
+        name: "Others",
+        icon: <AntDesign name="meh" size={16} color={theme.colors.text} />,
+        color: "#3b3abc",
       },
     ],
   };
@@ -317,6 +330,7 @@ const ExpenseDashboard = () => {
                 { backgroundColor: theme.colors.primary },
               ]}
               onPress={handleSave}
+              disabled={isLoading}
             >
               <Text style={styles.saveButtonText}>Save Transaction</Text>
             </TouchableOpacity>

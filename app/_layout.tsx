@@ -52,13 +52,6 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
-        <Stack.Screen
-          name="modal"
-          options={{
-            presentation: "modal",
-            animation: "fade_from_bottom",
-          }}
-        />
         <Stack.Screen name="+not-found" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>

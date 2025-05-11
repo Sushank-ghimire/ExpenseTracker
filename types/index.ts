@@ -1,37 +1,18 @@
-export interface DatabaseType {
-  getTransactions: (limit?: number) => Transaction[];
-  addTransaction: (transaction: Omit<Transaction, "id">) => void;
-  deleteTransaction: (id: string) => void;
-  getExpensesByCategory: () => {
-    id: string;
-    name: string;
-    amount: number;
-    color: string;
-  }[];
-  getMonthlyBudget: () => { spent: number; budget: number };
-  getMonthlySummary: () => { income: number; expenses: number };
-  getIncomeExpenseData: (
-    period: string,
-    month: number,
-    year: number
-  ) => {
-    incomeData: number[];
-    expenseData: number[];
-    dates: string[];
-  };
-  getCategoryData: (
-    period: string,
-    month: number,
-    year: number
-  ) => {
-    id: string;
-    name: string;
-    amount: number;
-    color: string;
-  }[];
-  exportData: () => Promise<string>;
-  importData: () => Promise<void>;
-  resetAllData: () => void;
+export interface ExpenseStore {
+  transactions: Transaction[];
+  getTransactions: () => Promise<void>;
+  deleteTransaction: (id: string) => Promise<void>;
+  resetAllData: () => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+  exportData: () => Promise<void>;
+  addTransaction: (
+    amount: number,
+    description: string,
+    type: "income" | "expense",
+    category: string
+  ) => Promise<void>;
+  addCategory: (name: string) => Promise<void>;
 }
 
 export interface Transaction {

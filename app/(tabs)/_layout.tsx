@@ -1,19 +1,14 @@
 import HeaderLeft from "@/components/homepage/HeaderLeft";
-import HeaderRight from "@/components/homepage/HeaderRight";
 import TabBarIcons from "@/components/TabBarIcons";
 import DatabaseProvider from "@/providers/DatabaseProvider";
 import { useTheme } from "@/providers/ThemeProvider";
-import { Tabs, useRouter } from "expo-router";
+import { Tabs } from "expo-router";
 import { useColorScheme } from "react-native";
 import { StatusBar } from "react-native";
 
 const TabsLayout = () => {
   const { theme, isDarkMode } = useTheme();
   const mobileTheme = useColorScheme();
-  const router = useRouter();
-  const handleNotificationPress = () => {
-    router.push("/modal");
-  };
   return (
     <DatabaseProvider>
       <StatusBar
@@ -55,9 +50,6 @@ const TabsLayout = () => {
             headerTitleStyle: {
               color: theme.colors.text,
             },
-            headerRight: () => (
-              <HeaderRight handleNotificationPress={handleNotificationPress} />
-            ),
             headerLeft: () => <HeaderLeft />,
             tabBarLabel: "Home",
             headerShadowVisible: false,
