@@ -11,7 +11,7 @@ export interface ExpenseStore {
     description: string,
     type: "income" | "expense",
     category: string
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   addCategory: (name: string) => Promise<void>;
 }
 

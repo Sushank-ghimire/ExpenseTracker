@@ -1,28 +1,42 @@
-import { FlatList, Text, RefreshControl } from "react-native";
-import { useState } from "react";
+import { FlatList, RefreshControl } from "react-native";
+import { useEffect, useState } from "react";
 import SafeAreaBackground from "@/components/SafeAreaBackground";
 import FlatListHeader from "@/components/homepage/FlatListHeader";
 import { Platform } from "react-native";
 import { useTheme } from "@/providers/ThemeProvider";
+import { useExpenseTrack } from "@/store/useExpense";
+import TransactionItem from "@/components/homepage/TransactionItem";
 
 const Index = () => {
+  const { getTransactions, transactions } = useExpenseTrack();
   const { theme } = useTheme();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsRefreshing(true);
     // Simulate a network request or data refresh
-    setTimeout(() => {
+    try {
+      await getTransactions();
+      console.log(transactions);
+    } catch (error) {
+      console.log("Getting error while fetching the transactions");
+    } finally {
       setIsRefreshing(false);
-    }, 1000); // Replace with real data fetch logic
+    }
   };
+
+  useEffect(() => {
+    handleRefresh();
+  }, [getTransactions]);
 
   return (
     <SafeAreaBackground>
       <FlatList
         ListHeaderComponent={() => <FlatListHeader />}
-        data={[]} // Your data here
-        renderItem={({}) => <Text>Items</Text>}
+        data={transactions ? transactions : []}
+        renderItem={({ index, item }) => (
+          <TransactionItem key={index} transaction={item} />
+        )}
         refreshControl={
           <RefreshControl
             refreshing={isRefreshing}

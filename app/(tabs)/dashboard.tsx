@@ -167,7 +167,7 @@ const ExpenseDashboard = () => {
     ]);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!amount || parseFloat(amount) <= 0) {
       handleAlertMessageAndModel(
         "Invalid Amount",
@@ -190,7 +190,19 @@ const ExpenseDashboard = () => {
       );
       return;
     }
-    addTransaction(+amount, description, selectedType, selectedCategory);
+    const result = await addTransaction(
+      +amount,
+      description,
+      selectedType,
+      selectedCategory
+    );
+    if (result) {
+      Alert.alert("Transaction", "Transaction added successfully");
+      setAmount("");
+      setDescription("");
+    } else {
+      Alert.alert("Transaction", "Failed to add the transaction");
+    }
   };
   return (
     <SafeAreaBackground>

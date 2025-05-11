@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { StatusBar, useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ThemeProvider from "@/providers/ThemeProvider";
 
 // Prevent the splash screen from auto-hiding
@@ -32,28 +33,30 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <StatusBar backgroundColor={"#111827"} barStyle={"light-content"} />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          statusBarAnimation: "fade",
-          freezeOnBlur: true,
-          headerTransparent: true,
-          headerShadowVisible: false,
-          animationTypeForReplace: "push",
-          headerBackVisible: true,
-          headerBlurEffect: "regular",
-        }}
-      >
-        <Stack.Screen
-          name="(onboarding)"
-          options={{
-            animation: theme === "light" ? "slide_from_bottom" : "default",
+      <GestureHandlerRootView>
+        <StatusBar backgroundColor={"#111827"} barStyle={"light-content"} />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            statusBarAnimation: "fade",
+            freezeOnBlur: true,
+            headerTransparent: true,
+            headerShadowVisible: false,
+            animationTypeForReplace: "push",
+            headerBackVisible: true,
+            headerBlurEffect: "regular",
           }}
-        />
-        <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
-        <Stack.Screen name="+not-found" options={{ presentation: "modal" }} />
-      </Stack>
+        >
+          <Stack.Screen
+            name="(onboarding)"
+            options={{
+              animation: theme === "light" ? "slide_from_bottom" : "default",
+            }}
+          />
+          <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
+          <Stack.Screen name="+not-found" options={{ presentation: "modal" }} />
+        </Stack>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }

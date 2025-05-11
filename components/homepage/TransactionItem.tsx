@@ -1,6 +1,15 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Transaction } from "@/types";
 import { useTheme } from "@/providers/ThemeProvider";
+import {
+  AntDesign,
+  Feather,
+  FontAwesome5,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { useExpenseTrack } from "@/store/useExpense";
+import { Alert } from "react-native";
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -12,16 +21,114 @@ export default function TransactionItem({
   isLast = false,
 }: TransactionItemProps) {
   const { theme } = useTheme();
+  const categories = {
+    expense: [
+      {
+        id: "food",
+        name: "Food",
+        icon: (
+          <MaterialCommunityIcons
+            name="food"
+            size={16}
+            color={theme.colors.text}
+          />
+        ),
+        color: "#f97316",
+      },
+      {
+        id: "transport",
+        name: "Transport",
+        icon: <Feather name="truck" size={16} color={theme.colors.text} />,
+        color: "#6366f1",
+      },
+      {
+        id: "shopping",
+        name: "Shopping",
+        icon: (
+          <AntDesign name="shoppingcart" size={16} color={theme.colors.text} />
+        ),
+        color: "#FFCE56",
+      },
+      {
+        id: "personal",
+        name: "Personal",
+        icon: (
+          <MaterialIcons
+            name="private-connectivity"
+            size={16}
+            color={theme.colors.text}
+          />
+        ),
+        color: "#3b8aae",
+      },
+      {
+        id: "others",
+        name: "Others",
+        icon: <AntDesign name="meh" size={16} color={theme.colors.text} />,
+        color: "#3b3abc",
+      },
+    ],
+    income: [
+      {
+        id: "salary",
+        name: "Salary",
+        icon: (
+          <FontAwesome5
+            name="money-bill-wave"
+            size={16}
+            color={theme.colors.text}
+          />
+        ),
+        color: "#10b981",
+      },
+      {
+        id: "freelance",
+        name: "Freelance",
+        icon: <Feather name="briefcase" size={16} color={theme.colors.text} />,
+        color: "#3b82f6",
+      },
+      {
+        id: "personal",
+        name: "Personal",
+        icon: (
+          <MaterialIcons
+            name="private-connectivity"
+            size={16}
+            color={theme.colors.text}
+          />
+        ),
+        color: "#3b8aae",
+      },
+      {
+        id: "others",
+        name: "Others",
+        icon: <AntDesign name="meh" size={16} color={theme.colors.text} />,
+        color: "#3b3abc",
+      },
+    ],
+  };
+
+  const { deleteTransaction } = useExpenseTrack();
+
+  const handleLongPress = async (transactionId: string) => {
+    Alert.alert(
+      "Transaction Aciton",
+      "Do you really want to delete this transaction ?",
+      [
+        {
+          text: "Yes",
+          onPress: async () => await deleteTransaction(transactionId),
+        },
+        {
+          text: "Cancel",
+        },
+      ]
+    );
+  };
 
   const isIncome = transaction.type === "income";
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-  };
+  const categoryList = isIncome ? categories.income : categories.expense;
+  const category = categoryList.find((c) => c.id === transaction.category);
 
   return (
     <TouchableOpacity
@@ -32,14 +139,15 @@ export default function TransactionItem({
           borderBottomColor: theme.colors.border,
         },
       ]}
+      onLongPress={() => handleLongPress(transaction.id)}
     >
       <View
         style={[
           styles.categoryIcon,
-          // { backgroundColor: category?.color || "#9CA3AF" },
+          { backgroundColor: category?.color || "#9CA3AF", borderRadius: 20 },
         ]}
       >
-        {/* {category?.icon} */}
+        {category?.icon}
       </View>
 
       <View style={styles.content}>
@@ -47,23 +155,26 @@ export default function TransactionItem({
           {transaction.description}
         </Text>
         <Text style={[styles.details, { color: theme.colors.textSecondary }]}>
-          {/* {category?.name} • {formatDate(transaction.date)} */}
+          {transaction.category} •{" "}
+          {new Date(Number(transaction.date)).toLocaleString()}
         </Text>
       </View>
 
       <View style={styles.amountContainer}>
-        {/* <View style={styles.amount}>
+        <View style={styles.amount}>
           {isIncome ? (
-            <ArrowDown
+            <AntDesign
+              name="arrowup"
+              style={styles.indicator}
               size={14}
               color={theme.colors.success}
-              style={styles.indicator}
             />
           ) : (
-            <ArrowUp
+            <AntDesign
+              name="arrowdown"
+              style={styles.indicator}
               size={14}
               color={theme.colors.error}
-              style={styles.indicator}
             />
           )}
           <Text
@@ -74,10 +185,7 @@ export default function TransactionItem({
           >
             ${transaction.amount.toFixed(2)}
           </Text>
-        </View> */}
-        <TouchableOpacity style={styles.menuButton}>
-          {/* <MoreVertical size={16} color={theme.colors.textSecondary} /> */}
-        </TouchableOpacity>
+        </View>
       </View>
     </TouchableOpacity>
   );
