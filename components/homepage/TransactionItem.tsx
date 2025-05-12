@@ -21,6 +21,7 @@ export default function TransactionItem({
   isLast = false,
 }: TransactionItemProps) {
   const { theme } = useTheme();
+
   const categories = {
     expense: [
       {

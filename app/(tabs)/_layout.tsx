@@ -2,7 +2,6 @@ import HeaderLeft from "@/components/homepage/HeaderLeft";
 import TabBarIcons from "@/components/TabBarIcons";
 import { useTheme } from "@/providers/ThemeProvider";
 import { Tabs } from "expo-router";
-import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { useColorScheme } from "react-native";
 import { StatusBar } from "react-native";
 
@@ -10,21 +9,8 @@ const TabsLayout = () => {
   const { theme, isDarkMode } = useTheme();
   const mobileTheme = useColorScheme();
 
-  const handleDatabaseCreation = async (db: SQLiteDatabase) => {
-    console.log("Database Initialized");
-    await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS transactions (
-      id TEXT PRIMARY KEY,
-      amount REAL NOT NULL,
-      description TEXT NOT NULL,
-      type TEXT CHECK(type IN ('income', 'expense')) NOT NULL,
-      category TEXT NOT NULL,
-      date TEXT NOT NULL
-    );
-  `);
-  };
   return (
-    <SQLiteProvider databaseName="tracker.db" onInit={handleDatabaseCreation}>
+    <>
       <StatusBar
         backgroundColor={theme.colors.background}
         barStyle={isDarkMode ? "light-content" : "dark-content"}
@@ -115,7 +101,7 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
-    </SQLiteProvider>
+    </>
   );
 };
 

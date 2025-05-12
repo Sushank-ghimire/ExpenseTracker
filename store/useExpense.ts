@@ -16,8 +16,10 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
       set({ isLoading: true });
       try {
         const db = await SQLite.openDatabaseAsync("tracker.db");
-        const transactions = await db.execAsync("SELECT * FROM transactions");
-        console.log(transactions);
+        const transactions = (await db.getAllAsync(
+          "SELECT * FROM transactions"
+        )) as Transaction[];
+        set({ transactions: transactions });
       } catch (error) {
         set({
           error:
@@ -33,12 +35,26 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
     deleteTransaction: async (id) => {
       set({ isLoading: true });
       try {
-        const db = await SQLite.openDatabaseAsync("tracker.db");
-        await db.runAsync("DELETE FROM transactions WHERE id = ?", id);
+        const db: SQLite.SQLiteDatabase = await SQLite.openDatabaseAsync(
+          "tracker.db"
+        );
+        const result = await db.runAsync(
+          "DELETE FROM transactions WHERE id = ?",
+          id
+        );
+        console.log(result);
+
         set((state) => ({
           transactions: state.transactions.filter((tx) => tx.id !== id),
           error: null,
         }));
+        const newTransactions = (await db.getAllAsync(
+          "SELECT * FROM transactions"
+        )) as Transaction[];
+        set({
+          transactions: newTransactions,
+          error: null,
+        });
       } catch (error) {
         set({
           error:
@@ -56,8 +72,11 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
       set({ isLoading: true });
       try {
         const db = await SQLite.openDatabaseAsync("tracker.db");
-        await db.execAsync("DROP TABLE IF EXISTS transactions;");
+        await db.execAsync("DROP TABLE IF EXISTS transactions");
         await db.execAsync("DROP TABLE IF EXISTS category");
+        await db.execAsync(
+          "id TEXT PRIMARY KEY,  amount REAL NOT NULL, description TEXT NOT NULL, TEXT CHECK(type IN ('income', 'expense')) NOT NULL,category TEXT NOT NULL, date TEXT NOT NULL"
+        );
       } catch (error) {
         set({
           error:

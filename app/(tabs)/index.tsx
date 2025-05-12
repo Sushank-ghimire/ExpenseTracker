@@ -17,7 +17,6 @@ const Index = () => {
     // Simulate a network request or data refresh
     try {
       await getTransactions();
-      console.log(transactions);
     } catch (error) {
       console.log("Getting error while fetching the transactions");
     } finally {

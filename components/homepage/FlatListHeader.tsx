@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   recentTransactionsContainer: {
     marginHorizontal: 24,
-    marginBottom: 24,
+    marginTop: 24,
   },
   sectionHeader: {
     flexDirection: "row",

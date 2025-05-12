@@ -16,6 +16,7 @@ import { useTheme } from "@/providers/ThemeProvider";
 import { useUser } from "@/store/useUser";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
+import { useExpenseTrack } from "@/store/useExpense";
 
 const appVersion =
   Constants.expoConfig?.version || Constants.manifest?.version || "1.0.0";
@@ -24,6 +25,8 @@ const settings = () => {
   const { getUserDetails, updateProfile } = useUser();
 
   const router = useRouter();
+
+  const { resetAllData } = useExpenseTrack();
 
   const { name, profileImage } = getUserDetails();
 
@@ -79,6 +82,23 @@ const settings = () => {
     } catch (error) {
       if (error instanceof Error) Alert.alert("Export Failed", error.message);
     }
+  };
+
+  const dropDatabase = async () => {
+    Alert.alert(
+      "Data deletion",
+      "Are you sure you want to delete your all data from app ? Note : Data cannot be recovered again",
+      [
+        {
+          text: "Yes",
+          onPress: async () => await resetAllData(),
+        },
+        {
+          text: "Cancel",
+          onPress: async () => null,
+        },
+      ]
+    );
   };
 
   return (
@@ -241,7 +261,7 @@ const settings = () => {
           <View style={styles.divider} />
 
           {/* Reset All Data */}
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity onPress={dropDatabase} style={styles.settingItem}>
             <View style={styles.settingLabelContainer}>
               <View
                 style={[
