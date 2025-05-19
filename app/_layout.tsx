@@ -5,6 +5,8 @@ import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ThemeProvider from "@/providers/ThemeProvider";
+import { MMKVLoader, useMMKVStorage } from "react-native-mmkv-storage";
+
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
