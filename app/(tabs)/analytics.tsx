@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import SafeAreaBackground from "@/components/SafeAreaBackground";
 import { useState } from "react";
 import { Fontisto, AntDesign } from "@expo/vector-icons";
@@ -7,6 +7,8 @@ import { useTheme } from "@/providers/ThemeProvider";
 import { Text } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native";
+import { BarChart } from "react-native-gifted-charts";
+import { getMonthlyChartData } from "@/utils/AnalyticsData";
 
 const periods = ["Week", "Month", "Year"];
 const months = [
@@ -30,6 +32,8 @@ const ExpenseAnalytics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("Month");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+  const [chartData, setChartData] = useState([]);
 
   const renderPeriodTitle = () => {
     if (selectedPeriod === "Week") return "This Week";
@@ -63,6 +67,16 @@ const ExpenseAnalytics = () => {
       setSelectedYear(selectedYear + 1);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getMonthlyChartData(selectedYear, selectedMonth);
+      setChartData(data as any);
+    };
+    fetchData();
+    console.log(chartData);
+  }, [selectedMonth, selectedYear]);
+
   return (
     <SafeAreaBackground>
       {/* Header */}
@@ -149,6 +163,32 @@ const ExpenseAnalytics = () => {
               size={19}
             />
           </TouchableOpacity>
+        </View>
+
+        <View
+          style={[styles.chartCard, { backgroundColor: theme.colors.card }]}
+        >
+          <Text style={[styles.chartTitle, { color: theme.colors.text }]}>
+            Monthly Overview
+          </Text>
+
+          {chartData.length > 0 ? (
+            <BarChart
+              data={chartData}
+              barWidth={22}
+              frontColor={theme.colors.primary}
+              yAxisTextStyle={{ color: theme.colors.textSecondary }}
+              xAxisLabelTextStyle={{ color: theme.colors.textSecondary }}
+              noOfSections={4}
+              isAnimated
+            />
+          ) : (
+            <Text
+              style={{ color: theme.colors.textSecondary, textAlign: "center" }}
+            >
+              No data available
+            </Text>
+          )}
         </View>
       </ScrollView>
     </SafeAreaBackground>
