@@ -13,6 +13,7 @@ export interface ExpenseStore {
     category: string
   ) => Promise<boolean>;
   addCategory: (name: string) => Promise<void>;
+  getTotalExpenseAndIncome: () => Promise<{ income: number; expense: number }>;
 }
 
 export interface Transaction {

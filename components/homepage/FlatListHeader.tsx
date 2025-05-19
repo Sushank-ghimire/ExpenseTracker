@@ -4,17 +4,31 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { useTheme } from "@/providers/ThemeProvider";
 import { AntDesign } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { useExpenseTrack } from "@/store/useExpense";
 
 const FlatListHeader = () => {
   const { theme } = useTheme();
-  const spent = 450;
-  const budget = 1000;
-  const income = 2500;
-  const expenses = 800;
+  const [userData, setUserData] = useState({
+    income: 0,
+    expense: 0,
+    budget: 0,
+  });
 
   const [mounted, setMounted] = useState(false);
 
+  const { getTotalExpenseAndIncome } = useExpenseTrack();
+
   useEffect(() => {
+    const fetchData = async () => {
+      const data = await getTotalExpenseAndIncome();
+      const expenseData = {
+        expense: data.expense,
+        income: data.income,
+        budget: 0,
+      };
+      setUserData(expenseData);
+    };
+    fetchData();
     setMounted(true);
   }, []);
   return (
@@ -32,7 +46,7 @@ const FlatListHeader = () => {
               <Text
                 style={[styles.spentAmount, { color: theme.colors.primary }]}
               >
-                ${spent.toFixed(2)}
+                Rs. {userData.expense.toFixed(2)}
               </Text>
               <Text
                 style={[
@@ -40,7 +54,7 @@ const FlatListHeader = () => {
                   { color: theme.colors.textSecondary },
                 ]}
               >
-                / ${budget.toFixed(2)}
+                / Rs. {userData.budget.toFixed(2)}
               </Text>
             </View>
           </View>
@@ -59,7 +73,9 @@ const FlatListHeader = () => {
           </View>
           <View>
             <Text style={styles.summaryLabel}>Income</Text>
-            <Text style={styles.summaryValue}>${income.toFixed(2)}</Text>
+            <Text style={styles.summaryValue}>
+              Rs. {userData.income.toFixed(2)}
+            </Text>
           </View>
         </Animated.View>
 
@@ -72,7 +88,9 @@ const FlatListHeader = () => {
           </View>
           <View>
             <Text style={styles.summaryLabel}>Expenses</Text>
-            <Text style={styles.summaryValue}>${expenses.toFixed(2)}</Text>
+            <Text style={styles.summaryValue}>
+              Rs. {userData.expense.toFixed(2)}
+            </Text>
           </View>
         </Animated.View>
       </View>
