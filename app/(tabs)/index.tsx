@@ -14,11 +14,9 @@ const Index = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    // Simulate a network request or data refresh
     try {
       await getTransactions();
     } catch (error) {
-      console.log("Getting error while fetching the transactions");
     } finally {
       setIsRefreshing(false);
     }

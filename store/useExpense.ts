@@ -4,6 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const STORAGE_KEY = "expenseData";
 
+const BUDGET_KEY = "budget";
+
 const generateId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
@@ -13,12 +15,14 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
     transactions: [],
     error: null,
     isLoading: false,
+    userBudget: 0,
 
     getTransactions: async () => {
       set({ isLoading: true });
       try {
         const storedData = await AsyncStorage.getItem("expenseData");
         const data: Transaction[] = storedData ? JSON.parse(storedData) : [];
+        await get().getBudget();
         set({ transactions: data });
       } catch (error) {
         set({
@@ -43,6 +47,7 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
           type,
           category,
           date: new Date().toISOString(),
+          budget: get().userBudget,
         };
 
         const currentTransactions = get().transactions;
@@ -147,8 +152,12 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
     getTotalExpenseAndIncome: async () => {
       const { transactions } = get();
 
+      const storedBudget = await AsyncStorage.getItem(BUDGET_KEY);
+      const budget = JSON.parse(storedBudget || "0");
+
       const totals = transactions.reduce(
         (acc, tx) => {
+          acc.budget = budget;
           if (tx.type === "income") {
             acc.income += tx.amount;
           } else if (tx.type === "expense") {
@@ -156,9 +165,16 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
           }
           return acc;
         },
-        { income: 0, expense: 0 }
+        { income: 0, expense: 0, budget: 0 }
       );
       return totals;
+    },
+    setBudget: async (budget) => {
+      await AsyncStorage.setItem(BUDGET_KEY, JSON.stringify(budget));
+    },
+    getBudget: async () => {
+      const budget = await AsyncStorage.getItem(BUDGET_KEY);
+      set({ userBudget: Number(budget) });
     },
   };
 });

@@ -157,7 +157,15 @@ export default function TransactionItem({
         </Text>
         <Text style={[styles.details, { color: theme.colors.textSecondary }]}>
           {transaction.category} •{" "}
-          {new Date(Number(transaction.date)).toLocaleString()}
+          {new Date(transaction.date).toLocaleString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          })}
         </Text>
       </View>
 

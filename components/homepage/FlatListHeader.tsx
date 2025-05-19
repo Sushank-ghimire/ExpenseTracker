@@ -16,11 +16,12 @@ const FlatListHeader = () => {
 
   const [mounted, setMounted] = useState(false);
 
-  const { getTotalExpenseAndIncome } = useExpenseTrack();
+  const { getTotalExpenseAndIncome, userBudget } = useExpenseTrack();
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getTotalExpenseAndIncome();
+
       const expenseData = {
         expense: data.expense,
         income: data.income,
@@ -54,7 +55,7 @@ const FlatListHeader = () => {
                   { color: theme.colors.textSecondary },
                 ]}
               >
-                / Rs. {userData.budget.toFixed(2)}
+                / Rs. {userBudget.toFixed(2)}
               </Text>
             </View>
           </View>

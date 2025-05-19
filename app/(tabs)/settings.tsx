@@ -26,11 +26,13 @@ const settings = () => {
 
   const router = useRouter();
 
-  const { resetAllData } = useExpenseTrack();
+  const { resetAllData, setBudget } = useExpenseTrack();
 
   const { name, profileImage } = getUserDetails();
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const [budget, setUserBudget] = useState(0);
 
   const onLongPress = () => {
     router.push("/(onboarding)/profileImage");
@@ -42,8 +44,9 @@ const settings = () => {
 
   const { theme } = useTheme();
 
-  const updateUserProfile = () => {
+  const updateUserProfile = async () => {
     updateProfile(image, userName);
+    await setBudget(budget);
   };
 
   const pickImage = async () => {
@@ -173,6 +176,28 @@ const settings = () => {
             >
               {name}
             </Text>
+          )}
+
+          {isEditing && (
+            <TextInput
+              placeholder="Enter your budget"
+              placeholderTextColor="#ccc"
+              keyboardType="number-pad"
+              value={String(budget)}
+              onChangeText={(text) => setUserBudget(Number(text))}
+              style={[
+                {
+                  padding: 13,
+                  width: "80%",
+                  margin: "auto",
+                  flex: 1,
+                  backgroundColor: theme.colors.background,
+                  borderRadius: 2,
+                  color: "white",
+                  marginTop: 8,
+                },
+              ]}
+            />
           )}
 
           {/* Edit / Save Button */}

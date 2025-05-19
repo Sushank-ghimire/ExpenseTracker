@@ -13,7 +13,14 @@ export interface ExpenseStore {
     category: string
   ) => Promise<boolean>;
   addCategory: (name: string) => Promise<void>;
-  getTotalExpenseAndIncome: () => Promise<{ income: number; expense: number }>;
+  getTotalExpenseAndIncome: () => Promise<{
+    income: number;
+    expense: number;
+    budget: number | 0;
+  }>;
+  setBudget: (budget: number) => Promise<void>;
+  userBudget: number;
+  getBudget: () => Promise<void>;
 }
 
 export interface Transaction {
@@ -23,6 +30,7 @@ export interface Transaction {
   type: string | "income" | "expense"; // 'income' | 'expense'
   category: string; // Category ID
   date: string; // ISO date string
+  budget?: number;
 }
 
 export interface UserProfile {
@@ -30,12 +38,4 @@ export interface UserProfile {
   profileImage: string | null;
   getUserData: () => Promise<void>;
   updateProfile: (image: string, name?: string) => Promise<void>;
-}
-
-export interface Notification {
-  id: string;
-  title: string;
-  body: string;
-  read: boolean;
-  date: string;
 }
