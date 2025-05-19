@@ -26,13 +26,13 @@ const settings = () => {
 
   const router = useRouter();
 
-  const { resetAllData, setBudget } = useExpenseTrack();
+  const { resetAllData, setBudget, userBudget } = useExpenseTrack();
 
   const { name, profileImage } = getUserDetails();
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const [budget, setUserBudget] = useState(0);
+  const [budget, setUserBudget] = useState(userBudget);
 
   const onLongPress = () => {
     router.push("/(onboarding)/profileImage");
@@ -46,7 +46,9 @@ const settings = () => {
 
   const updateUserProfile = async () => {
     updateProfile(image, userName);
-    await setBudget(budget);
+    if (!budget) {
+      await setBudget(budget);
+    }
   };
 
   const pickImage = async () => {
