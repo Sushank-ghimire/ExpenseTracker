@@ -1,12 +1,11 @@
 import { create } from "zustand";
 import { ExpenseStore, Transaction } from "@/types";
-import * as SQLite from "expo-sqlite";
 
 const generateId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
-export const useExpenseTrack = create<ExpenseStore>((set, get) => {
+export const useExpenseTrack = create<ExpenseStore>((set) => {
   return {
     transactions: [],
     error: null,
@@ -15,11 +14,6 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
     getTransactions: async () => {
       set({ isLoading: true });
       try {
-        const db = await SQLite.openDatabaseAsync("tracker.db");
-        const transactions = (await db.getAllAsync(
-          "SELECT * FROM transactions"
-        )) as Transaction[];
-        set({ transactions: transactions });
       } catch (error) {
         set({
           error:
@@ -35,26 +29,6 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
     deleteTransaction: async (id) => {
       set({ isLoading: true });
       try {
-        const db: SQLite.SQLiteDatabase = await SQLite.openDatabaseAsync(
-          "tracker.db"
-        );
-        const result = await db.runAsync(
-          "DELETE FROM transactions WHERE id = ?",
-          id
-        );
-        console.log(result);
-
-        set((state) => ({
-          transactions: state.transactions.filter((tx) => tx.id !== id),
-          error: null,
-        }));
-        const newTransactions = (await db.getAllAsync(
-          "SELECT * FROM transactions"
-        )) as Transaction[];
-        set({
-          transactions: newTransactions,
-          error: null,
-        });
       } catch (error) {
         set({
           error:
@@ -71,12 +45,6 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
     resetAllData: async () => {
       set({ isLoading: true });
       try {
-        const db = await SQLite.openDatabaseAsync("tracker.db");
-        await db.execAsync("DROP TABLE IF EXISTS transactions");
-        await db.execAsync("DROP TABLE IF EXISTS category");
-        await db.execAsync(
-          "id TEXT PRIMARY KEY,  amount REAL NOT NULL, description TEXT NOT NULL, TEXT CHECK(type IN ('income', 'expense')) NOT NULL,category TEXT NOT NULL, date TEXT NOT NULL"
-        );
       } catch (error) {
         set({
           error:
@@ -94,22 +62,6 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
       console.log(amount, description, type, category);
 
       try {
-        const db = await SQLite.openDatabaseAsync("tracker.db");
-        console.log(db);
-
-        await db.runAsync(
-          "INSERT INTO transactions(id, amount, description,type, category, date) VALUES(?, ?, ?, ?, ?, ?)",
-          generateId(),
-          amount,
-          description,
-          type,
-          category,
-          Date.now()
-        );
-        const transactions = (await db.getAllAsync(
-          "SELECT * FROM transactions"
-        )) as Transaction[];
-        set({ transactions });
         return true;
       } catch (error) {
         set({
@@ -128,7 +80,6 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
     exportData: async () => {
       set({ isLoading: true });
       try {
-        const db = await SQLite.openDatabaseAsync("tracker.db");
       } catch (error) {
         set({
           error:
@@ -140,16 +91,16 @@ export const useExpenseTrack = create<ExpenseStore>((set, get) => {
         set({ isLoading: false });
       }
     },
-
-    addCategory: async () => {
+    addCategory: async (category: string) => {
       set({ isLoading: true });
       try {
-        const db = await SQLite.openDatabaseAsync("tracker.db");
+        console.log(`Category added: ${category}`);
       } catch (error) {
         set({
           error:
             error instanceof Error ? error.message : "Failed to add category",
         });
+        console.log(error);
       } finally {
         set({ isLoading: false });
       }
