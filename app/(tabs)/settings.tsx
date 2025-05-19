@@ -17,6 +17,7 @@ import { useUser } from "@/store/useUser";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
 import { useExpenseTrack } from "@/store/useExpense";
+import { exportData } from "@/utils/ExportData";
 
 const appVersion =
   Constants.expoConfig?.version || Constants.manifest?.version || "1.0.0";
@@ -75,15 +76,9 @@ const settings = () => {
     }
   };
 
-  const exportData = async () => {};
-
   const handleExport = async () => {
     try {
-      const result = await exportData();
-      Alert.alert(
-        "Data Exported",
-        `Your data has been exported successfully to: ${result}`
-      );
+      await exportData();
     } catch (error) {
       if (error instanceof Error) Alert.alert("Export Failed", error.message);
     }
