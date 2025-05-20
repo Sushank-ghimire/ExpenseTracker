@@ -11,7 +11,6 @@ import Animated, {
 } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/Feather";
 import SafeAreaBackground from "@/components/SafeAreaBackground";
-import Storage from "expo-sqlite/kv-store";
 import { useTheme } from "@/providers/ThemeProvider";
 
 export default function SplashScreen() {
@@ -46,7 +45,7 @@ export default function SplashScreen() {
       withDelay(1200, withTiming(0, { duration: 400 }))
     );
     const timeout = setTimeout(() => {
-      router.push("/(onboarding)/welcome");
+      router.replace("/(onboarding)/welcome");
     }, 2000);
 
     return () => clearTimeout(timeout);

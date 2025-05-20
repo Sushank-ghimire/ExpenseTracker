@@ -67,7 +67,7 @@ export default function WelcomeScreen() {
 
   if (alreadyUsed) {
     setTimeout(() => {
-      router.push("/(tabs)");
+      router.replace("/(tabs)");
     }, 1000);
   }
 
@@ -80,13 +80,13 @@ export default function WelcomeScreen() {
       });
     } else {
       completeOnboarding();
-      router.push("/(tabs)");
+      router.replace("/(tabs)");
     }
   };
 
   const handleSkip = () => {
     completeOnboarding();
-    router.push("/(tabs)");
+    router.replace("/(tabs)");
   };
 
   return (
