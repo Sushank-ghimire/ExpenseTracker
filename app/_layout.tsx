@@ -1,3 +1,4 @@
+import "react-native-reanimated";
 import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { StatusBar, useColorScheme } from "react-native";
@@ -5,7 +6,6 @@ import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ThemeProvider from "@/providers/ThemeProvider";
-
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
