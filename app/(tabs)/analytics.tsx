@@ -7,7 +7,7 @@ import { useTheme } from "@/providers/ThemeProvider";
 import { Text } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native";
-import { BarChart } from "react-native-gifted-charts";
+import { BarChart, Grid } from "react-native-svg-charts";
 import { getMonthlyChartData } from "@/utils/AnalyticsData";
 
 const periods = ["Week", "Month", "Year"];
@@ -33,7 +33,7 @@ const ExpenseAnalytics = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState<{ value: number }[]>([]);
 
   const renderPeriodTitle = () => {
     if (selectedPeriod === "Week") return "This Week";
@@ -74,7 +74,6 @@ const ExpenseAnalytics = () => {
       setChartData(data as any);
     };
     fetchData();
-    console.log(chartData);
   }, [selectedMonth, selectedYear]);
 
   return (
@@ -173,15 +172,19 @@ const ExpenseAnalytics = () => {
           </Text>
 
           {chartData.length > 0 ? (
-            <BarChart
-              data={chartData}
-              barWidth={22}
-              frontColor={theme.colors.primary}
-              yAxisTextStyle={{ color: theme.colors.textSecondary }}
-              xAxisLabelTextStyle={{ color: theme.colors.textSecondary }}
-              noOfSections={4}
-              isAnimated
-            />
+            // <BarChart
+            //   data={chartData}
+            //   svg={{ fill }}
+            //   yAccessor={({ item }) => Number(item.value || 0)}
+            //   contentInset={{ top: 30, bottom: 30 }}
+            // >
+            //   <Grid />
+            // </BarChart>
+            <Text
+              style={{ color: theme.colors.textSecondary, textAlign: "center" }}
+            >
+              Implementing the analytics
+            </Text>
           ) : (
             <Text
               style={{ color: theme.colors.textSecondary, textAlign: "center" }}

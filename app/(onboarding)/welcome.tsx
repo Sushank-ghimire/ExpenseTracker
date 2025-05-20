@@ -63,7 +63,9 @@ export default function WelcomeScreen() {
   const [currentScreen, setCurrentScreen] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
   const { theme } = useTheme();
-  const [alreadyUsed] = useState(Storage.getItemSync("isVisited"));
+  const [alreadyUsed] = useState(
+    Boolean(Storage.getItemSync("isVisited")) || false
+  );
 
   if (alreadyUsed) {
     setTimeout(() => {
